@@ -11,9 +11,16 @@ else:
     db_builder.build_db()
 
 df = pd.read_csv("data/output.csv")
-df = df.drop(columns=['has_at_symbol','has_explicit_port','has_https'])
+
+df = df.drop(columns=['has_at_symbol','has_explicit_port'])
 print(df)
-data_visualization.show_correlation_matrix(df)
+
+top_10_entropy = df.sort_values(by="entropy",ascending=False).head(10)
+print(top_10_entropy)
+top_10_link_length = df.sort_values(by="link_length",ascending=False).head(10)
+print(top_10_link_length)
+
+#data_visualization.show_correlation_matrix(df)
 
 #togliere colonne senza dati oppure aggiungere un altro dataset
 

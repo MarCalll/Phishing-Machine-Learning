@@ -86,7 +86,7 @@ def build_db():
     combined_df['has_explicit_port'] = combined_df['link'].apply(has_explicit_port)
 
     print("creazione colonna has_https\n")
-    combined_df['has_https'] = combined_df['link'].str.startswith('https://').astype(int)
+    combined_df['has_https'] = combined_df['link'].str.startswith('https').astype(int)
 
     print("creazione colonna entropy\n")
     combined_df['entropy'] = combined_df['link'].apply(shannon_entropy)
