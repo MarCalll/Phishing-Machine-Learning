@@ -8,7 +8,17 @@ import re
 from urllib.parse import urlparse
 
 
-sensitive_keywords = ['login', 'secure', 'update', 'verify', 'account', 'bank', 'password']
+sensitive_keywords = [
+    'login', 'secure', 'update', 'verify', 'account', 'bank', 'password',
+    'signin', 'confirm', 'validate', 'submit', 'security',
+    'pay', 'payment', 'billing', 'invoice', 'transaction',
+    'urgent', 'alert', 'warning', 'unusual', 'locked', 'suspended',
+    'identity', 'credentials', 'authentication', 'recovery',
+    'reset', 'support', 'access', 'admin', 'verifyidentity',
+    'reverify', 'pin', 'code', 'token', '2fa', 'passcode',
+    'ssn', 'social', 'securitynumber','paypal', 'apple', 'google', 'microsoft', 'amazon', 'facebook', 'instagram', 'dropbox', 'outlook', 'office365'
+]
+
 regex_sensitive_keywords = '|'.join(sensitive_keywords)
 
 def is_ip_address(link):
@@ -65,6 +75,9 @@ def build_db():
     
     print("creazione colonna num_subdomains\n")
     combined_df["num_subdomains"] = combined_df["link"].apply(count_subdomains)
+
+    print("creazione colonna has_subdomains\n")
+    combined_df['has_subdomain'] = (combined_df['num_subdomains'] > 1).astype(int)
     
     print("creazione colonna count_sensitive_keyword\n")
     combined_df['count_sensitive_keyword'] = combined_df['link'].str.findall(regex_sensitive_keywords,flags=re.IGNORECASE).str.len()

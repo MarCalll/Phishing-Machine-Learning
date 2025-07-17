@@ -11,8 +11,11 @@ else:
     db_builder.build_db()
 
 df = pd.read_csv("data/output.csv")
+df = df.drop(columns=['has_at_symbol','has_explicit_port','has_https'])
+print(df)
 data_visualization.show_correlation_matrix(df)
 
+#togliere colonne senza dati oppure aggiungere un altro dataset
 
 
 
