@@ -1,1 +1,4 @@
 *.pyc
+/__pycache__
+/AutogluonModels
+/catboost_info

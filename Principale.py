@@ -1,28 +1,40 @@
 import pandas as pd
+
 import db_builder
 import os
 import data_visualization
+import machine_learning
 
-## https://1drv.ms/w/c/b4634b89beb127d2/ERBumWK5kSxPsvVa6Z5QJWoBcDoZhPueE-87AKMkHb8GYw?e=8BI0O2
+df = None
 
-if os.path.exists("data\output.csv"):
-    print("✅ Il file esiste già. Nessuna operazione eseguita.")
-else:
-    db_builder.build_db()
-
-df = pd.read_csv("data/output.csv")
-
-df = df.drop(columns=['has_at_symbol','has_explicit_port'])
+df = db_builder.build_db()
+df = db_builder.remove_duplicates(df)
 print(df)
 
-top_10_entropy = df.sort_values(by="entropy",ascending=False).head(10)
-print(top_10_entropy)
-top_10_link_length = df.sort_values(by="link_length",ascending=False).head(10)
-print(top_10_link_length)
+data_visualization.show_correlation_matrix(df)
+#Le correlazioni con la variabile target sono generalmente deboli (tutte < 0.15), suggerendo che nessuna feature da sola è un predittore forte di phishing,
+# ma insieme possono essere utili in un modello di machine learning.
 
-#data_visualization.show_correlation_matrix(df)
+machine_learning.set_df(df)
+machine_learning.run_randomforestclassifier()
+machine_learning.run_xgboost()
+machine_learning.run_lightGBM()
+machine_learning.run_catboost()
+machine_learning.run_extraTrees()
+machine_learning.run_LogReg()
+machine_learning.run_autoGluon(df)
 
-#togliere colonne senza dati oppure aggiungere un altro dataset
+legitimate_test_domains = [
+    "google.com",                          # Brand noto, dominio semplice
+    "github.com",                          # Servizio sviluppatori famoso
+    "stackoverflow.com",                   # Community tecnica
+    "medium.com",                          # Piattaforma blogging
+    "auth0.com",                           # Servizio auth - nome sospetto
+    "vercel.app",                          # TLD .app + nome breve
+    "account.google.com",                  # Sottodominio con "account"
+    "security.ubuntu.com"                  # Sottodominio con "security"
+]
 
-
-
+for ele in legitimate_test_domains:
+    custom_df = db_builder.test_custom_domain(ele)
+    machine_learning.predict_dominio(custom_df)
