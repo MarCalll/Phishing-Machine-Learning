@@ -2,3 +2,4 @@
 /__pycache__
 /AutogluonModels
 /catboost_info
+data/output.csv
