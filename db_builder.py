@@ -82,7 +82,7 @@ def build_db():
 def remove_duplicates(df):
     df_clean = df.drop_duplicates(subset=['full_domain', 'clean_domain', 'top_level_domain'], keep='first')
     phishing_count = df_clean['is_phishing'].sum()
-    legitimate_count = len(df) - phishing_count
+    legitimate_count = (df_clean['is_phishing'] == 0).sum()
 
     print(f"Phishing: {phishing_count}")
     print(f"Legittimi: {legitimate_count}")

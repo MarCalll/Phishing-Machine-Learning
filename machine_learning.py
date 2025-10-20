@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-X = y = X_train = X_test = y_train = y_test = None
+X = y = X_train = X_test = y_train = y_test = train_data = test_data = None
 
 rf_model = RandomForestClassifier(
     n_estimators=200,
@@ -60,12 +60,18 @@ lr = LogisticRegression(
     max_iter=1000
     )
 
+autogluon = TabularPredictor(
+    label="is_phishing",
+    problem_type="binary",
+    eval_metric="f1"
+    )
 
 def set_df(df):
-    global X, y, X_train, X_test, y_train, y_test
+    global X, y, X_train, X_test, y_train, y_test,train_data,test_data
     X = df.drop(["is_phishing", "link","clean_domain","top_level_domain",'full_domain'], axis=1)
     y = df["is_phishing"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    train_data, test_data = train_test_split(df, test_size=0.3, random_state=42)
     
 def run_randomforestclassifier():
     rf_model.fit(X_train, y_train)
@@ -120,18 +126,15 @@ def run_LogReg():
 
     print("\nClassification Report LogisticRegression:\n", classification_report(y_test, y_pred))
 
-def run_autoGluon(df):
+def run_autoGluon():
+    autogluon.fit(train_data=train_data,presets="medium_quality_faster_train",time_limit=600,verbosity=0)
 
-    train_data, test_data = train_test_split(df, test_size=0.3, random_state=42)
-
-    predictor = TabularPredictor(label="is_phishing",problem_type="binary",eval_metric="f1").fit(train_data=train_data,presets="best",time_limit=600,verbosity=0)
-
-    y_pred = predictor.predict(test_data)
+    y_pred = autogluon.predict(test_data)
     print("\nClassification Report autoGluon:\n", classification_report(y_test, y_pred))
-    fi = predictor.feature_importance(test_data)
+    fi = autogluon.feature_importance(test_data)
     print("\nFeature Importance:\n", fi)
 
-def predict_dominio(custom_df) :
+def predict_dominio_xgboost(custom_df) :
     new_custom_df = custom_df.drop(columns=['link',"clean_domain","top_level_domain",'full_domain'])
     xgb.fit(X_train, y_train)
 
@@ -146,6 +149,30 @@ def predict_dominio(custom_df) :
         print("Il dominio presenta un numero significativo di indicatori di phishing.")
     elif prob_phish >= 0.40:
         print("Il dominio mostra alcune caratteristiche ambigue o sospette")
+    elif prob_phish >= 0.20:
+        print("La classificazione indica una bassa probabilità di phishing.")
+    else:
+        print("Il rischio di phishing rilevato è minimo.")
+
+def predict_dominio_autogluon(custom_df):
+    autogluon.fit(train_data=train_data,presets="medium_quality_faster_train",time_limit=600,verbosity=0)
+    y_pred_proba = autogluon.predict_proba(custom_df)
+        
+    # Se la classe 'phish' esiste, prendila
+    if 'phish' in y_pred_proba.columns:
+        prob_phish = y_pred_proba.iloc[0]['phish']
+    else:
+        # Altrimenti prendi la seconda colonna
+        prob_phish = y_pred_proba.iloc[0][y_pred_proba.columns[1]]
+    
+    print(f"Probabilità che il dominio sia phishing: {prob_phish * 100:.2f}%")
+
+    if prob_phish >= 0.80:
+        print("Il dominio è classificato come Phishing ad alta confidenza.")
+    elif prob_phish >= 0.60:
+        print("Il dominio presenta un numero significativo di indicatori di phishing.")
+    elif prob_phish >= 0.40:
+        print("Il dominio mostra alcune caratteristiche ambigue o sospette.")
     elif prob_phish >= 0.20:
         print("La classificazione indica una bassa probabilità di phishing.")
     else:
