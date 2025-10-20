@@ -1,6 +1,6 @@
+data/output.csv
 *.pyc
 /__pycache__
 /AutogluonModels
 /catboost_info
-data/output.csv
-data/output.csv
+
