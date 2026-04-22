@@ -84,8 +84,6 @@ Le feature sono costruite esclusivamente dalle informazioni interne dei domini:
 - **Phishing:** [Phishing.Database Project](https://github.com/mitchellkrogza/Phishing.Database) — lista open-source aggiornata regolarmente, scaricata il 14 luglio 2025 (812.635 domini attivi)
 - **Legittimi:** [Tranco Top List](https://tranco-list.eu/) — il milione di domini più visitati a livello globale, scaricata il 14 luglio 2025
 
-Dopo la rimozione dei duplicati e il bilanciamento tramite **undersampling**, il dataset finale contiene **423.690 record bilanciati** (211.845 per classe).
-
 ---
 
 ## 🤖 Modelli confrontati
@@ -115,17 +113,3 @@ Il miglior modello (LightGBM) raggiunge:
 
 ---
 
-## 📚 Riferimenti
-
-- Phishing.Database Project: https://github.com/mitchellkrogza/Phishing.Database
-- Tranco List: https://tranco-list.eu/
-- Verizon DBIR 2025
-- Scikit-learn documentation: https://scikit-learn.org
-- LightGBM documentation: https://lightgbm.readthedocs.io
-
----
-
-## 👤 Autore
-
-**Marco Caldarola** — Tesi Triennale in Ingegneria Informatica, A.A. 2024/2025  
-Relatore: Prof. Rocco Pietrini
