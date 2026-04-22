@@ -1,6 +1,6 @@
-# 🛡️ Phishing Domain Detector — ML-based Anti-Phishing System
+# 🛡️ Utilizzo dell'intelligenza artificiale per contrastare il phishing
 
-Un sistema di rilevamento automatico di domini di phishing basato su **machine learning**, sviluppato come progetto di tesi triennale in Ingegneria Informatica.
+Il progetto è un insieme di script python che indentificano e rilevano automaticamente i domini di phishing utilizzando il **machine learning**.
 
 ---
 
@@ -24,21 +24,10 @@ Il sistema sfrutta tecniche di **feature engineering** su URL e nomi di dominio,
 ├── phishing_cleaner.py           # Caricamento e pulizia dei domini di phishing
 ├── legitimate_cleaner.py         # Caricamento e pulizia dei domini legittimi
 ├── machine_learning.py           # Addestramento e valutazione dei modelli ML
-├── data_visualization.py         # Visualizzazione della matrice di correlazione
-└── requirements.txt
+└── data_visualization.py         # Visualizzazione della matrice di correlazione
 ```
 
 ---
-
-## ⚙️ Installazione
-
-**Prerequisiti:** Python 3.11+
-
-```bash
-git clone https://github.com/<tuo-username>/<nome-repo>.git
-cd <nome-repo>
-pip install -r requirements.txt
-```
 
 ### Dipendenze principali
 
